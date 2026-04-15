@@ -1,0 +1,42 @@
+app.post("/api/predict", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No image uploaded",
+    });
+  }
+
+  // 🎯 SIMULATED ML OUTPUT (replace later with real model)
+  const mockPredictions = [
+    {
+      disease: "Leaf Blight 🌿",
+      confidence: 92,
+      advice: "Use copper-based fungicide spray",
+    },
+    {
+      disease: "Healthy Crop 🌱",
+      confidence: 96,
+      advice: "No action needed, crop is healthy",
+    },
+    {
+      disease: "Fungal Infection ⚠️",
+      confidence: 88,
+      advice: "Improve drainage & apply fungicide",
+    },
+    {
+      disease: "Nutrient Deficiency 🧪",
+      confidence: 85,
+      advice: "Add nitrogen-rich fertilizer",
+    },
+  ];
+
+  const result =
+    mockPredictions[Math.floor(Math.random() * mockPredictions.length)];
+
+  res.json({
+    success: true,
+    prediction: result,
+    model: "SmartMandi-AI-v1",
+    timestamp: new Date(),
+  });
+});
