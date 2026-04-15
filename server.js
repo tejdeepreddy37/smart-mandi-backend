@@ -3,130 +3,81 @@ const cors = require("cors");
 const multer = require("multer");
 
 const app = express();
-const upload = multer({ dest: "uploads/" });
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-/* =========================
-   🏠 BASE ROUTE
-========================= */
-app.get("/", (req, res) => {
-  res.json({ message: "🚜 Smart Mandi Backend Running" });
-});
-
-/* =========================
-   📊 MANDI PRICES API
-========================= */
+// ------------------
+// 🌾 MANDI DATA API
+// ------------------
 app.get("/api/mandi", (req, res) => {
   res.json([
-    { name: "Wheat", price: 2400 },
-    { name: "Rice", price: 3100 },
-    { name: "Cotton", price: 6200 },
-    { name: "Maize", price: 1800 },
-    { name: "Sugarcane", price: 450 }
+    { crop: "Wheat", price: 2400 },
+    { crop: "Rice", price: 2100 },
+    { crop: "Maize", price: 1800 },
+    { crop: "Cotton", price: 6200 },
   ]);
 });
 
-/* =========================
-   🌦️ WEATHER API
-========================= */
+// ------------------
+// ☁️ WEATHER API
+// ------------------
 app.get("/api/weather", (req, res) => {
   res.json({
-    condition: "Sunny",
+    location: "Andhra Pradesh",
     temp: 32,
-    advice: "Good for irrigation"
+    humidity: 60,
+    advice: "Good for irrigation",
   });
 });
 
-/* =========================
-   🤖 AI CROP PREDICTION
-========================= */
-app.post("/api/predict", upload.single("image"), (req, res) => {
-  const results = [
-    "Leaf Blight 🌿",
-    "Healthy Crop 🌱",
-    "Fungal Infection ⚠️",
-    "Nutrient Deficiency 🧪",
-    "Rust Disease 🍂"
-  ];
+// ------------------
+// 🛒 MARKETPLACE API
+// ------------------
+let products = [];
 
-  const prediction = results[Math.floor(Math.random() * results.length)];
-  const confidence = Math.floor(Math.random() * 30) + 70;
-
-  res.json({
-    success: true,
-    disease: prediction,
-    confidence: confidence
-  });
+app.get("/api/market", (req, res) => {
+  res.json(products);
 });
 
-/* =========================
-   🛒 MARKETPLACE SYSTEM
-========================= */
+app.post("/api/market", (req, res) => {
+  const { name, price } = req.body;
 
-let listings = [];
-
-/**
- * Add crop listing
- */
-app.post("/api/listings", (req, res) => {
-  const { farmer, crop, price, quantity, location } = req.body;
-
-  if (!farmer || !crop || !price || !quantity) {
-    return res.status(400).json({
-      success: false,
-      message: "Missing required fields",
-    });
-  }
-
-  const newListing = {
+  const newItem = {
     id: Date.now(),
-    farmer,
-    crop,
+    name,
     price,
-    quantity,
-    location: location || "Unknown",
-    createdAt: new Date(),
   };
 
-  listings.push(newListing);
+  products.push(newItem);
+  res.json(newItem);
+});
 
+// ------------------
+// 🤖 AI CROP DETECTION (DUMMY)
+// ------------------
+const upload = multer({ dest: "uploads/" });
+
+app.post("/api/predict", upload.single("image"), (req, res) => {
   res.json({
-    success: true,
-    message: "Crop listed successfully 🚜",
-    data: newListing,
+    crop: "Tomato",
+    disease: "Leaf Curl",
+    confidence: "92%",
   });
 });
 
-/**
- * Get all listings
- */
-app.get("/api/listings", (req, res) => {
-  res.json({
-    success: true,
-    data: listings,
-  });
+// ------------------
+// ❤️ HEALTH CHECK
+// ------------------
+app.get("/", (req, res) => {
+  res.send("🚜 Smart Mandi API is running...");
 });
 
-/**
- * Delete listing
- */
-app.delete("/api/listings/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-
-  listings = listings.filter((item) => item.id !== id);
-
-  res.json({
-    success: true,
-    message: "Listing removed",
-  });
-});
-
-/* =========================
-   🚀 START SERVER
-========================= */
-const PORT = 7000;
+// ------------------
+// 🚀 START SERVER
+// ------------------
+const PORT = process.env.PORT || 7000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Smart Mandi backend running on port ${PORT}`);
