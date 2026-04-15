@@ -4,19 +4,28 @@ const multer = require("multer");
 
 const app = express();
 
-// Middleware
+// ------------------
+// ✅ MIDDLEWARE
+// ------------------
 app.use(cors());
 app.use(express.json());
 
 // ------------------
-// 🌾 MANDI DATA API
+// ✅ ROOT (IMPORTANT FOR TEST)
+// ------------------
+app.get("/", (req, res) => {
+  res.send("🚜 Smart Mandi API LIVE");
+});
+
+// ------------------
+// 🌾 MANDI API
 // ------------------
 app.get("/api/mandi", (req, res) => {
   res.json([
     { crop: "Wheat", price: 2400 },
     { crop: "Rice", price: 2100 },
     { crop: "Maize", price: 1800 },
-    { crop: "Cotton", price: 6200 },
+    { crop: "Cotton", price: 6200 }
   ]);
 });
 
@@ -28,7 +37,7 @@ app.get("/api/weather", (req, res) => {
     location: "Andhra Pradesh",
     temp: 32,
     humidity: 60,
-    advice: "Good for irrigation",
+    advice: "Good for irrigation"
   });
 });
 
@@ -47,7 +56,7 @@ app.post("/api/market", (req, res) => {
   const newItem = {
     id: Date.now(),
     name,
-    price,
+    price
   };
 
   products.push(newItem);
@@ -63,21 +72,14 @@ app.post("/api/predict", upload.single("image"), (req, res) => {
   res.json({
     crop: "Tomato",
     disease: "Leaf Curl",
-    confidence: "92%",
+    confidence: "92%"
   });
 });
 
 // ------------------
-// ❤️ HEALTH CHECK
+// 🚀 START SERVER (IMPORTANT FIX)
 // ------------------
-app.get("/", (req, res) => {
-  res.send("🚜 Smart Mandi API is running...");
-});
-
-// ------------------
-// 🚀 START SERVER
-// ------------------
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Smart Mandi backend running on port ${PORT}`);
