@@ -5,20 +5,20 @@ const multer = require("multer");
 const app = express();
 
 // ------------------
-// ✅ MIDDLEWARE
+// MIDDLEWARE
 // ------------------
 app.use(cors());
 app.use(express.json());
 
 // ------------------
-// ✅ ROOT (IMPORTANT FOR TEST)
+// ROOT ROUTE
 // ------------------
 app.get("/", (req, res) => {
   res.send("🚜 Smart Mandi API LIVE");
 });
 
 // ------------------
-// 🌾 MANDI API
+// MANDI API
 // ------------------
 app.get("/api/mandi", (req, res) => {
   res.json([
@@ -30,7 +30,7 @@ app.get("/api/mandi", (req, res) => {
 });
 
 // ------------------
-// ☁️ WEATHER API
+// WEATHER API
 // ------------------
 app.get("/api/weather", (req, res) => {
   res.json({
@@ -42,7 +42,7 @@ app.get("/api/weather", (req, res) => {
 });
 
 // ------------------
-// 🛒 MARKETPLACE API
+// MARKETPLACE API
 // ------------------
 let products = [];
 
@@ -64,7 +64,7 @@ app.post("/api/market", (req, res) => {
 });
 
 // ------------------
-// 🤖 AI CROP DETECTION (DUMMY)
+// AI PREDICTION (DUMMY)
 // ------------------
 const upload = multer({ dest: "uploads/" });
 
@@ -77,9 +77,9 @@ app.post("/api/predict", upload.single("image"), (req, res) => {
 });
 
 // ------------------
-// 🚀 START SERVER (IMPORTANT FIX)
+// START SERVER (IMPORTANT FIX)
 // ------------------
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`🚀 Smart Mandi backend running on port ${PORT}`);
