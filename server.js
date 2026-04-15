@@ -11,14 +11,14 @@ app.use(cors());
 app.use(express.json());
 
 // ------------------
-// ROOT ROUTE
+// HEALTH CHECK ROUTE
 // ------------------
 app.get("/", (req, res) => {
   res.send("🚜 Smart Mandi API LIVE");
 });
 
 // ------------------
-// MANDI API
+// MANDI DATA API
 // ------------------
 app.get("/api/mandi", (req, res) => {
   res.json([
@@ -77,9 +77,9 @@ app.post("/api/predict", upload.single("image"), (req, res) => {
 });
 
 // ------------------
-// START SERVER (IMPORTANT FIX)
+// START SERVER (RENDER SAFE)
 // ------------------
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Smart Mandi backend running on port ${PORT}`);
